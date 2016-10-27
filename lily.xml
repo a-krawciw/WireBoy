@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<Robot>
+    <DeviceInterfaceModule name="DIM" serialNumber="AL00XKQL">
+        <I2cDevice name="adafruit" port="0" />
+        <OpticalDistanceSensor name="eopd" port="0" />
+        <I2cDevice name="adafruit" port="0" />
+        <OpticalDistanceSensor name="eopd" port="0" />
+    </DeviceInterfaceModule>
+    <MotorController name="Motor Controller 1" serialNumber="AL00XUVE">
+        <Motor name="driveL" port="1" />
+        <Motor name="driveR" port="2" />
+    </MotorController>
+    <MotorController name="Motor Controller 2" serialNumber="AL00XTJ7">
+        <Motor name="elbow" port="1" />
+    </MotorController>
+    <MotorController name="Motor Controller 3" serialNumber="AL00YCFN">
+        <Motor name="turnTable" port="1" />
+        <Motor name="tapeMeasure" port="2" />
+    </MotorController>
+    <ServoController name="Servo Controller 1" serialNumber="AI02QQV7">
+        <Servo name="tapeAdjust" port="2" />
+        <Servo name="frontguard" port="3" />
+        <Servo name="backguard" port="5" />
+    </ServoController>
+    <ServoController name="Servo Controller 2" serialNumber="AL00VDCD">
+        <Servo name="wrist" port="1" />
+        <Servo name="brush" port="2" />
+        <Servo name="doorL" port="3" />
+        <Servo name="doorR" port="4" />
+    </ServoController>
+<ServoController name="Servo Controller 3" serialNumber="AI02RKEW">
+        <Servo name="hook" port="1" /> 
+        <Servo name="people" port="2" />        
+ 	   <Servo name="bluezip" port="3" />
+        <Servo name="redzip" port="4" />  </ServoController>
+</Robot>

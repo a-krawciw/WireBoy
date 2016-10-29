@@ -131,14 +131,16 @@ import org.w3c.dom.Element;
             BufferedImage powerModule = readImage("/hardwareImages/powerModule.png");
             g.setColor(Color.BLACK);
 
-            g.drawRoundRect(5, 5, 200, 100, 5, 5);
+//            g.drawRoundRect(5, 5, 200, 100, 5, 5);
 
-            g.drawImage(powerModule, 250, 5 + topY, 250, 200, null);
+            Point loc = PointConstants.powerModule;
 
-            g.drawRect(595, 5, 110, 190);
+            g.drawImage(powerModule, loc.x, loc.y, 250, 200, null);
+
+//            g.drawRect(595, 5, 110, 190);
             int x = 0;
             for (HardwareDevice h : devices) {
-                x = h.drawModule(g, x);
+                h.drawModule(g);
                 System.out.println(x);
             }
             return bm;

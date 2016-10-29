@@ -18,23 +18,9 @@ public class SensorModule extends HardwareDevice {
 
     }
 
-    public String getSerialNumber() {
-        return serialNumber;
-    }
-
-    public void setSerialNumber(String serialNumber) {
-        this.serialNumber = serialNumber;
-    }
-
-    public String serialNumber = "";
-
-    @Override
-    public int drawModule(Graphics g, int startX) {
+    public void drawModule(Graphics2D g) {
         g.setColor(Color.ORANGE);
-        startX = super.drawModule(g, startX);
+        super.drawModule(g);
 
-        g.drawString(getSerialNumber(), drawingX + 40, 485);
-
-        return startX;
     }
 }

@@ -21,7 +21,6 @@ public class Sensor extends HardwareDevice {
     }
 
 
-    @Override
     public int drawModule(Graphics g, int startX) {
         return 0;
     }

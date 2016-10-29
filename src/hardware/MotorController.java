@@ -1,5 +1,6 @@
 package hardware;
 
+import main.PointConstants;
 import main.XMLParser;
 
 import javax.imageio.ImageIO;
@@ -19,24 +20,10 @@ public class MotorController extends HardwareDevice {
         image = XMLParser.readImage("/hardwareImages/motorController.png");
     }
 
-    public String getSerialNumber() {
-        return serialNumber;
-    }
-
-    public void setSerialNumber(String serialNumber) {
-        this.serialNumber = serialNumber;
-    }
-
-    public String serialNumber = "";
-
-    @Override
-    public int drawModule(Graphics g, int startX) {
+    public void drawModule(Graphics2D g) {
         g.setColor(Color.BLUE);
-        startX = super.drawModule(g, startX);
-        g.drawString(getSerialNumber(), drawingX + 35, topY + 275);
-        g.setColor(Color.BLACK);
-        drawStringInBox(g, name, drawingX + 20, topY + 320, 160, 40, 5);
-        return startX;
+        super.drawModule(g);
+
     }
 
     public String getName(){

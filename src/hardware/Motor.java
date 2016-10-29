@@ -18,7 +18,6 @@ public class Motor extends HardwareDevice{
 
     }
 
-    @Override
     public int drawModule(Graphics g, int startX) {
         return 0;
     }

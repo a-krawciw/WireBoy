@@ -1,11 +1,11 @@
 package hardware;
 
+import main.PointConstants;
+
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-
-import static main.XMLParser.devices;
-import static main.XMLParser.topY;
 
 /**
  * Created by Windows on 2016-10-23.
@@ -15,74 +15,110 @@ public abstract class HardwareDevice {
     int port = 0;
     protected int drawingX = 0;
     String name = "";
+    Point loc;
+    Point cablePoint;
     protected ArrayList<HardwareDevice> children;
+    public String serialNumber = "";
 
     public HardwareDevice(String name, int port){
         this.name = name;
         this.port = port;
+
+        loc = PointConstants.MODULE_LOC[port];
+        cablePoint = new Point(170, 0);
+
         children = new ArrayList<>();
     }
 
-    public int drawModule(Graphics g, int startX){
-        int x = startX;
-        Color c = g.getColor();
-
-        if(children.size() == 1){
-            g.drawRect(startX  + 50, topY + 500, 100, 100);
-            drawStringInBox(g, children.get(0).getName(), x + 50, topY + 500, 100, 100, 5);
-            x += 210;
-        } else {
-            for (HardwareDevice child : children) {
-                g.setColor(c);
-                g.drawRect(x, topY + 500, 100, 100);
-                drawStringInBox(g, child.getName(), x, topY + 500, 100, 100, 5);
-                x += 105;
-            }
-        }
-
-        g.setColor(c);
-        drawingX = (children.size() > 1)? (x - startX) / 2 - 100 + startX: startX;
-
-        if(image != null){
-            g.drawImage(image, drawingX, topY + 250, 200, 200, null);
-        } else {
-            g.drawRect(drawingX, 200, topY + 250, 200);
-
-        }
-
-        drawWires(g);
-        return x + 5;
+    public String getSerialNumber() {
+        return serialNumber;
     }
 
-    protected void drawWires(Graphics g){
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
+    }
 
-        if(drawingX + 160 < 500 && drawingX + 160 > 250){
-            System.out.println(name);
-            g.fillRect(drawingX + 160, topY + 240, 5, 10);
-            if(drawingX < 375){
-                g.fillRect(230 - port * 5, topY + 240, drawingX - 70 + port * 5, 5);
-                g.fillRect(230 - port * 5, port * 10, 5, topY + 240 - port * 10);
-                g.fillRect(230 - port * 5, port * 10, 65 + 28 * port + port * 5 , 5);
-            } else {
-                g.fillRect(230 - port * 5, topY + 240, drawingX - 70 + port * 5, 5);
-                g.fillRect(230 - port * 5, port * 10, 5, topY + 240 - port * 10);
-                g.fillRect(230 - port * 5, port * 10, 65 + 28 * port + port * 5 , 5);
-            }
+    public void drawModule(Graphics2D g){
+        Color c = g.getColor();
+
+        Point pt = PointConstants.MODULE_LOC[port];
+
+        AffineTransform at = new AffineTransform();
+
+        at.translate(pt.x, pt.y);
+
+        if (isOnLeft()) {
+            at.rotate(Math.PI / 2, image.getWidth() / 2, image.getHeight() / 2);
+            cablePoint = new Point(190, PointConstants.CABLE_LOC.x);
         } else {
-            g.fillRect(drawingX + 160, port * 10, 5, topY + 250 - port * 10);
+            at.rotate(-Math.PI / 2, image.getWidth() / 2, image.getHeight() / 2);
+            cablePoint = new Point(10, 200 - PointConstants.CABLE_LOC.x);
+        }//else
 
-            int width = Math.abs(295 + 28 * port - drawingX - 160);
-            if(295 + 28 * port > drawingX + 160){
-                g.fillRect(drawingX + 160, port * 10, width, 5);
-            } else {
-                g.fillRect(295 + 28 * port, port * 10, width, 5);
-            }
-        }
+        if (image != null) {
+            g.drawImage(image, at, null);
+        } else {
+            g.drawRect(pt.x, pt.y, 200, 200);
+        }//else
+
+        drawWires(g);
+
+        g.setStroke(new BasicStroke(2));
+        g.setFont(g.getFont().deriveFont(Font.BOLD, 16));
+        int childrenY = loc.y + 30;
+        if (isOnLeft()) {
+
+            g.drawString(serialNumber, loc.x - 130, loc.y + 30);
+
+            for (HardwareDevice child : children) {
+                g.drawString(child.getName(), loc.x - 130, childrenY += 50);
+            }//for
+
+
+            g.drawRect(loc.x - 140, loc.y, 100, childrenY - loc.y + 10);
+        } else {
+
+            g.drawString(serialNumber, loc.x + 350, loc.y + 30);
+
+            for (HardwareDevice child : children) {
+                g.drawString(child.getName(), loc.x + 350, childrenY += 50);
+            }//for
+
+            g.drawRect(loc.x + 340, loc.y, 100, childrenY - loc.y + 10);
+        }//else
+    }
+
+    public boolean isOnLeft() {
+        return port > 2;
+    }
+
+    protected void drawWires(Graphics2D g){
+
+        Point portLoc = PointConstants.PORTS[port];
+        Point powerModule = PointConstants.powerModule;
+        Point lWire = PointConstants.leftWireSplit;
+        Point rWire = PointConstants.rightWireSplit;
+
+        int PADDING = 20;
+
+        g.setStroke(new BasicStroke(5));
+
+        int level = (isOnLeft())? (5 - (port - 2)) : (port + 1);
+
+        g.drawLine(portLoc.x + powerModule.x, portLoc.y + powerModule.y, portLoc.x + powerModule.x, powerModule.y + portLoc.y - 40 * level);
+
+        if (isOnLeft()) {
+            g.drawLine(portLoc.x + powerModule.x, powerModule.y + portLoc.y - 40 * level, lWire.x + (5 - level * PADDING), powerModule.y + portLoc.y - 40 * level);
+            g.drawLine(lWire.x + (5 - level * PADDING), powerModule.y + portLoc.y - 40 * level, lWire.x + (5 - level * PADDING), loc.y + cablePoint.y);
+            g.drawLine(lWire.x + (5 - level * PADDING), loc.y + cablePoint.y, loc.x + cablePoint.x, loc.y + cablePoint.y);
+        } else {
+            g.drawLine(portLoc.x + powerModule.x, powerModule.y + portLoc.y - 40 * level, rWire.x - (level * PADDING), powerModule.y + portLoc.y - 40 * level);
+            g.drawLine(rWire.x - (level * PADDING), powerModule.y + portLoc.y - 40 * level, rWire.x - (level * PADDING), loc.y + cablePoint.y);
+            g.drawLine(rWire.x - (level * PADDING), loc.y + cablePoint.y, loc.x + cablePoint.x, loc.y + cablePoint.y);
+        }//else
 
 
 
-
-        g.fillRect(295 + 28 * port, port * 10, 5, topY + 30 - port * 10);
     }
 
     public String getName(){

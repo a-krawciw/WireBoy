@@ -19,6 +19,9 @@ public abstract class HardwareDevice {
     Point cablePoint;
     protected ArrayList<HardwareDevice> children;
     public String serialNumber = "";
+    public static Color greyText = new Color(0x808080);
+    static Color greyLine = new Color(0xADADAD);
+    static Color greySerial = new Color(0x696969);
 
     public HardwareDevice(String name, int port){
         this.name = name;
@@ -65,26 +68,35 @@ public abstract class HardwareDevice {
 
         g.setStroke(new BasicStroke(2));
         g.setFont(g.getFont().deriveFont(Font.BOLD, 16));
+        drawNames(g);
+    }
+
+    public void drawNames(Graphics g){
         int childrenY = loc.y + 30;
         if (isOnLeft()) {
-
+            g.setColor(greySerial);
             g.drawString(serialNumber, loc.x - 130, loc.y + 30);
 
+            g.setColor(greyText);
             for (HardwareDevice child : children) {
-                g.drawString(child.getName(), loc.x - 130, childrenY += 50);
+                g.drawString(child.port + "    " + child.getName(), loc.x - 150, childrenY += 20);
             }//for
 
-
-            g.drawRect(loc.x - 140, loc.y, 100, childrenY - loc.y + 10);
+            g.setColor(greyLine);
+            g.drawLine(loc.x - 150, loc.y + 35, loc.x - 50, loc.y + 35);
+            g.drawLine(loc.x - 135, loc.y + 10, loc.x - 135, loc.y + 155);
         } else {
-
+            g.setColor(greySerial);
             g.drawString(serialNumber, loc.x + 350, loc.y + 30);
 
+            g.setColor(greyText);
             for (HardwareDevice child : children) {
-                g.drawString(child.getName(), loc.x + 350, childrenY += 50);
+                g.drawString(child.port + "    " + child.getName(), loc.x + 330, childrenY += 20);
             }//for
 
-            g.drawRect(loc.x + 340, loc.y, 100, childrenY - loc.y + 10);
+            g.setColor(greyLine);
+            g.drawLine(loc.x + 330, loc.y + 35, loc.x + 430, loc.y + 35);
+            g.drawLine(loc.x + 345, loc.y + 10, loc.x + 345, loc.y + 155);
         }//else
     }
 
@@ -188,6 +200,10 @@ public abstract class HardwareDevice {
 
     public int futureSize(){
         return (numChildren() > 1)?numChildren() * 110:220;
+    }
+
+    public String getPort(){
+        return port + "";
     }
 
 

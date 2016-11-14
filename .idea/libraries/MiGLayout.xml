@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="MiGLayout">
+    <CLASSES>
+      <root url="file://$USER_HOME$/Downloads/MiGLayout" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$USER_HOME$/Downloads/MiGLayout" />
+    </SOURCES>
+    <jarDirectory url="file://$USER_HOME$/Downloads/MiGLayout" recursive="false" />
+    <jarDirectory url="file://$USER_HOME$/Downloads/MiGLayout" recursive="false" type="SOURCES" />
+  </library>
+</component>

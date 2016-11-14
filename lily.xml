@@ -6,6 +6,11 @@
         <I2cDevice name="adafruit" port="0" />
         <OpticalDistanceSensor name="eopd" port="0" />
     </DeviceInterfaceModule>
+    <ServoController name="Servo Controller 1" serialNumber="AI02QQV7">
+        <Servo name="tapeAdjust" port="2" />
+        <Servo name="frontguard" port="3" />
+        <Servo name="backguard" port="5" />
+    </ServoController>
     <MotorController name="Motor Controller 1" serialNumber="AL00XUVE">
         <Motor name="driveL" port="1" />
         <Motor name="driveR" port="2" />
@@ -17,11 +22,6 @@
         <Motor name="turnTable" port="1" />
         <Motor name="tapeMeasure" port="2" />
     </MotorController>
-    <ServoController name="Servo Controller 1" serialNumber="AI02QQV7">
-        <Servo name="tapeAdjust" port="2" />
-        <Servo name="frontguard" port="3" />
-        <Servo name="backguard" port="5" />
-    </ServoController>
     <ServoController name="Servo Controller 2" serialNumber="AL00VDCD">
         <Servo name="wrist" port="1" />
         <Servo name="brush" port="2" />

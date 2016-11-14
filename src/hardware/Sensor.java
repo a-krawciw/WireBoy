@@ -24,4 +24,15 @@ public class Sensor extends HardwareDevice {
     public int drawModule(Graphics g, int startX) {
         return 0;
     }
+
+    public String getPort(){
+        switch (type){
+            case "I2cDevice": return "I2C" + port;
+            case "OpticalDistanceSensor": return "A" + port;
+            case "DigitalDevice": return "D" + port;
+            case "AnalogOutput": return "AO" + port;
+            case "PWM": return "PWM" + port;
+        }
+        return "" + port;
+    }
 }

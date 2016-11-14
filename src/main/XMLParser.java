@@ -15,9 +15,11 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 
-    public class XMLParser {
+
+public class XMLParser {
         public static Color mrGrey = Color.decode("#E4E4E4");
         public static ArrayList<HardwareDevice> devices = new ArrayList<>();
+        public static BufferedImage image;
 
         public static int topY = 50;
 
@@ -26,7 +28,7 @@ import org.w3c.dom.Element;
 
             topY = 10 + 10 * devices.size();
 
-            BufferedImage image = generateImage();
+            image = generateImage("lily");
             try {
                 ImageIO.write(image, "png", new File("output.png"));
             } catch (IOException e) {
@@ -111,38 +113,47 @@ import org.w3c.dom.Element;
         }
 
 
-        public static BufferedImage generateImage(){
-            int totalNum = 0;
+        public static BufferedImage generateImage(String fileName){
 
-            for (HardwareDevice parent :  devices) {
-                totalNum += parent.futureSize();
-            }
-
-            System.out.println(totalNum);
-
-            BufferedImage bm = new BufferedImage(totalNum, 1500, BufferedImage.TYPE_INT_ARGB);
+            BufferedImage bm = new BufferedImage(1520, 1180, BufferedImage.TYPE_INT_ARGB);
 
             Graphics2D g = bm.createGraphics();
 
             g.setColor(Color.WHITE);
-            g.fillRect(0, 0, totalNum, 1500);
+            g.fillRect(0, 0, 1520, 1180);
 
+            g.setColor(HardwareDevice.greyText);
+            g.drawString(fileName, 500, 100);
             BufferedImage battery = readImage("/hardwareImages/battery.png");
+            BufferedImage phone = readImage("/hardwareImages/phone.png");
             BufferedImage powerModule = readImage("/hardwareImages/powerModule.png");
             g.setColor(Color.BLACK);
-
-//            g.drawRoundRect(5, 5, 200, 100, 5, 5);
 
             Point loc = PointConstants.powerModule;
 
             g.drawImage(powerModule, loc.x, loc.y, 250, 200, null);
 
-//            g.drawRect(595, 5, 110, 190);
-            int x = 0;
+            loc = PointConstants.battery;
+            g.drawImage(battery, loc.x, loc.y, 100, 200, null);
+            g.setColor(Color.BLACK);
+            g.setStroke(new BasicStroke(6));
+            g.drawLine(PointConstants.POWER_BATTERY.x, PointConstants.POWER_BATTERY.y, PointConstants.POWER_BATTERY.x, PointConstants.POWER_BATTERY.y - 40);
+            g.drawLine(PointConstants.POWER_BATTERY.x, PointConstants.POWER_BATTERY.y - 40, PointConstants.POWER_BATTERY.x + 205, PointConstants.POWER_BATTERY.y - 40);
+            g.drawLine(PointConstants.POWER_BATTERY.x + 205, PointConstants.POWER_BATTERY.y - 40, PointConstants.POWER_BATTERY.x + 205, PointConstants.POWER_POWER_MODULE.y);
+            g.drawLine(PointConstants.POWER_POWER_MODULE.x, PointConstants.POWER_POWER_MODULE.y, PointConstants.POWER_BATTERY.x + 205, PointConstants.POWER_POWER_MODULE.y);
+
+            loc = PointConstants.phone;
+            g.drawImage(phone, loc.x, loc.y, null);
+            g.drawLine(PointConstants.USB_PHONE.x, PointConstants.USB_PHONE.y, PointConstants.USB_PHONE.x - 10, PointConstants.USB_PHONE.y);
+            g.drawLine(PointConstants.USB_PHONE.x - 10, PointConstants.USB_PHONE.y, PointConstants.USB_PHONE.x - 10, PointConstants.USB_PHONE.y - 220);
+            g.drawLine(PointConstants.USB_PHONE.x - 10, PointConstants.USB_PHONE.y - 220, PointConstants.USB_PHONE.x + 140, PointConstants.USB_PHONE.y - 220);
+            g.drawLine(PointConstants.USB_PHONE.x + 140, PointConstants.USB_PHONE.y - 220, PointConstants.USB_PHONE.x + 140, PointConstants.USB_POWER_MODULE.y);
+            g.drawLine(PointConstants.USB_PHONE.x + 140, PointConstants.USB_POWER_MODULE.y, PointConstants.USB_POWER_MODULE.x, PointConstants.USB_POWER_MODULE.y);
+
             for (HardwareDevice h : devices) {
                 h.drawModule(g);
-                System.out.println(x);
             }
+            image = bm;
             return bm;
         }
 

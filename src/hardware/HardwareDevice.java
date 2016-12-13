@@ -1,7 +1,9 @@
 package hardware;
 
-import main.PointConstants;
+import main.Main.PointConstants;
+import main.XMLParser;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -24,10 +26,12 @@ public abstract class HardwareDevice {
     static Color greySerial = new Color(0x696969);
 
     public HardwareDevice(String name, int port){
+
         this.name = name;
         this.port = port;
 
         loc = PointConstants.MODULE_LOC[port];
+
         cablePoint = new Point(170, 0);
 
         children = new ArrayList<>();

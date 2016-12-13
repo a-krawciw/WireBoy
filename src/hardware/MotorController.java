@@ -1,6 +1,5 @@
 package hardware;
 
-import main.PointConstants;
 import main.XMLParser;
 
 import javax.imageio.ImageIO;

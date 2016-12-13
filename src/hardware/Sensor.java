@@ -16,8 +16,6 @@ public class Sensor extends HardwareDevice {
     public Sensor (String name, int port, String type){
         super(name, port);
         this.type = type;
-        image = XMLParser.readImage("/hardwareImages/sensor.png");
-
     }
 
 
@@ -27,11 +25,21 @@ public class Sensor extends HardwareDevice {
 
     public String getPort(){
         switch (type){
+            case "AdafruitColorSensor":
+            case "AdafruitBNO055IMU":
+            case "ColorSensor":
+            case "I2cDeviceSynch":
+            case "IrSeekerV3":
+            case "ModernRoboticsI2cRangeSensor":
+            case "ModernRoboticsI2cCompassSensor":
             case "I2cDevice": return "I2C" + port;
+            case "AnalogInput":
             case "OpticalDistanceSensor": return "A" + port;
+            case "Led":
+            case "TouchSensor":
             case "DigitalDevice": return "D" + port;
             case "AnalogOutput": return "AO" + port;
-            case "PWM": return "PWM" + port;
+            case "PulseWidthDevice": return "PWM" + port;
         }
         return "" + port;
     }

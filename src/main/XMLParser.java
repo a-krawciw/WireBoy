@@ -1,11 +1,13 @@
 package main;
 
+import main.Main.PointConstants;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 
@@ -14,6 +16,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
+import sun.rmi.runtime.Log;
 
 
 public class XMLParser {
@@ -24,7 +27,7 @@ public class XMLParser {
         public static int topY = 50;
 
         public static void main(String[] args){
-            parseXML("lily.xml");
+            parseXML("lilssy.xml");
 
             topY = 10 + 10 * devices.size();
 
@@ -32,7 +35,7 @@ public class XMLParser {
             try {
                 ImageIO.write(image, "png", new File("output.png"));
             } catch (IOException e) {
-                e.printStackTrace();
+                show(e.getMessage());
             }
 
 
@@ -58,21 +61,18 @@ public class XMLParser {
                                 MotorController mc = new MotorController(e.getAttribute("name"), (temp - 1) / 2);
                                 mc.setSerialNumber(e.getAttribute("serialNumber"));
                                 addChildren(mc, e.getChildNodes());
-                                System.out.println("Motor Controller " + mc);
                                 devices.add(mc);
                                 break;
                             case "ServoController":
                                 ServoController sc = new ServoController(e.getAttribute("name"), (temp - 1) / 2);
                                 sc.setSerialNumber(e.getAttribute("serialNumber"));
                                 addChildren(sc, nNode.getChildNodes());
-                                System.out.println("Servo Controller " + sc);
                                 devices.add(sc);
                                 break;
                             case "DeviceInterfaceModule":
                                 SensorModule sm = new SensorModule(e.getAttribute("name"), (temp - 1) / 2);
                                 sm.setSerialNumber(e.getAttribute("serialNumber"));
                                 addChildren(sm, nNode.getChildNodes());
-                                System.out.println("Sensor Module " + sm);
                                 devices.add(sm);
                                 break;
                         }
@@ -81,7 +81,7 @@ public class XMLParser {
 
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                show("out" + e.getMessage());
             }
         }
 
@@ -106,7 +106,8 @@ public class XMLParser {
                             parent.addChild(se);
                             break;
                     }
-                }catch (Exception e){}
+                }catch (Exception e){
+                }
 
             }
 
@@ -123,8 +124,12 @@ public class XMLParser {
             g.fillRect(0, 0, 1520, 1180);
 
             g.setColor(HardwareDevice.greyText);
-            g.drawString(fileName, 500, 100);
-            BufferedImage battery = readImage("/hardwareImages/battery.png");
+            Font defaultFont = g.getFont();
+            g.setFont(defaultFont.deriveFont(50.0f));
+            g.setColor(Color.BLACK);
+            g.drawString(fileName, 1520 / 2 - (g.getFontMetrics().stringWidth(fileName) / 2), 1050);
+            g.setFont(defaultFont);
+            BufferedImage battery = readImage("/hardwareImages/battery.PNG");
             BufferedImage phone = readImage("/hardwareImages/phone.png");
             BufferedImage powerModule = readImage("/hardwareImages/powerModule.png");
             g.setColor(Color.BLACK);
@@ -160,17 +165,23 @@ public class XMLParser {
 
         public static BufferedImage readImage(String filePath){
             try {
-                return ImageIO.read(XMLParser.class.getResourceAsStream(filePath));
+                return ImageIO.read(XMLParser.class.getClass().getResourceAsStream(filePath));
             } catch (Exception e){
-                System.out.println("Could not find file:" + filePath);
+                show("Could not find file:" + filePath);
             }
             return null;
+        }
+
+        public static void reset(){
+            devices.clear();
         }
 
 
 
 
-
+        public static void show(String text){
+            JOptionPane.showMessageDialog(Main.frame, text);
+        }
 
 
 

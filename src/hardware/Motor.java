@@ -14,8 +14,6 @@ public class Motor extends HardwareDevice{
 
     public Motor (String name, int port){
         super(name, port);
-        image = XMLParser.readImage("/hardwareImages/motor.png");
-
     }
 
     public int drawModule(Graphics g, int startX) {

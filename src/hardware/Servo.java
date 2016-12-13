@@ -15,8 +15,6 @@ public class Servo extends HardwareDevice{
 
     public Servo (String name, int port){
         super(name, port);
-        image = XMLParser.readImage("/hardwareImages/servo.png");
-
     }
 
     public int drawModule(Graphics g, int startX) {

@@ -1,5 +1,6 @@
 package hardware;
 
+import main.Main;
 import main.XMLParser;
 
 import javax.imageio.ImageIO;
@@ -17,6 +18,7 @@ public class MotorController extends HardwareDevice {
     public MotorController (String name, int port){
         super(name, port);
         image = XMLParser.readImage("/hardwareImages/motorController.png");
+        loc = Main.PointConstants.MODULE_LOC[port];
     }
 
     public void drawModule(Graphics2D g) {

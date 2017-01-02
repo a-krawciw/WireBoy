@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<Robot>
+    <LegacyModuleController name="Legacy Module 1" serialNumber="AL00B8V">
+        <MotorController name="driveSystem" port="0">
+            <Motor name="driveL" port="1" />
+            <Motor name="driveR" port="2" />
+        </MotorController>
+        <ServoController name="servos" port="3">
+            <Servo name="autoball" port="1" />
+            <Servo name="latch" port="2" />
+            <Servo name="flag" port="3" />
+            <Servo name="gate" port="5" />
+        </ServoController>
+        <MotorController name="scissorControl" port="4">
+            <Motor name="scissor" port="1" />
+            <Motor name="stomper" port="2" />
+        </MotorController>
+        <LegoUltrasonic name="ultra" port="5" />
+    </LegacyModuleController>
+</Robot>

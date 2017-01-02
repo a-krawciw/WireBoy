@@ -1,8 +1,6 @@
 package main;
 
-import FXTSwing.CreditsPage;
-import FXTSwing.FXTButton;
-import FXTSwing.InstructionsDialog;
+import FXTSwing.*;
 import net.miginfocom.swing.MigLayout;
 
 import javax.imageio.ImageIO;
@@ -11,11 +9,14 @@ import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.io.File;
 import java.io.IOException;
 
 import static java.lang.Math.PI;
 import static javax.swing.JFileChooser.APPROVE_OPTION;
+import static main.XMLParser.image;
 
 /**
  * Created by Windows on 2016-11-13.
@@ -30,6 +31,9 @@ public class Main {
     static JFileChooser files;
     static JPanel picture;
     static FileFilter xmlFilter;
+    static ZoomTip zoom;
+
+    static MouseMotionHandler mouse;
 
     public static Color backgroundColor = Color.WHITE;
     public static Color foregroundColor = Color.BLUE;
@@ -48,20 +52,28 @@ public class Main {
             public void paintComponent(Graphics g){
                 super.paintComponent(g);
                 Graphics2D g2 = (Graphics2D) g;
-                if(XMLParser.image != null){
-                    g.drawImage(XMLParser.image, 0, 0, 760, 590, null);
+                g2.setColor(backgroundColor);
+                g2.fillRect(0, 0, 760, 590);
+                if(image != null){
+                    g.drawImage(image, 0, 295 - (380 * image.getHeight() / image.getWidth()), 760, 760 * image.getHeight() / image.getWidth(), null);
+                    g.setColor(Color.LIGHT_GRAY);
+                    g.drawRect(0, 295 - (380 * image.getHeight() / image.getWidth()), 760, 760 * image.getHeight() / image.getWidth());
                 } else {
-                    g2.setColor(backgroundColor);
-                    g2.fillRect(0, 0, getWidth(), getHeight());
                     g2.setColor(Color.BLACK);
                     g2.setStroke(new BasicStroke(10));
-                    g2.drawRect(0, 0, getWidth(), getHeight());
+                    g2.drawRect(0, 0, 760, 590);
                 }
             }
         };
 
+        zoom = new ZoomTip(200, 200);
+        picture.add(zoom);
 
-        frame.add(picture, "w 760, h 590, wrap");
+        mouse = new MouseMotionHandler(zoom);
+
+        picture.addMouseMotionListener(mouse);
+
+        frame.add(picture, "wmin 760, hmin 590, wrap");
 
         instructions = new FXTButton("Instructions");
         instructions.addActionListener(new ButtonHandler());
@@ -105,7 +117,7 @@ public class Main {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if(e.getSource().equals(save) && XMLParser.image != null){
+            if(e.getSource().equals(save) && image != null){
                 files.setFileFilter(new FileFilter() {
                     @Override
                     public boolean accept(File f) {
@@ -124,7 +136,7 @@ public class Main {
                 if(result == APPROVE_OPTION){
                     try {
                         File toWrite = files.getSelectedFile();
-                        ImageIO.write(XMLParser.image, "png", new File(removeFileExtensions(toWrite.getAbsolutePath()) + ".png"));
+                        ImageIO.write(image, "png", new File(removeFileExtensions(toWrite.getAbsolutePath()) + ".png"));
                     } catch (IOException f) {
                         XMLParser.show("HELLO MY DARLING" + f.getMessage());
                     }
@@ -157,9 +169,9 @@ public class Main {
     public static class PointConstants {
 
         public final static Point powerModule = new Point(600, 500);
+        public final static Point legacyModule = new Point(450, 300);
         public final static Point phone = new Point(725, 750);
         public final static Point battery = new Point(600, 750);
-
 
         public final static Point leftWireSplit = new Point(500, 380);
         public final static Point rightWireSplit = new Point(900, 380);
@@ -174,13 +186,15 @@ public class Main {
 
         public final static Point CHILDREN_LIST_LOC = new Point(0, 50);
 
-        public final static Point[] MODULE_LOC = {new Point(1000, 600),
+        public final static Point[] MODULE_LOC = {
+                new Point(1000, 600),
                 new Point(1000, 300),
                 new Point(1000, 0),
                 new Point(200, 0),
                 new Point(200, 300),
                 new Point(200, 600),
-                new Point(200, 900)};
+                new Point(200, 900)
+        };
 
         public final static Point[] PORTS = {
                 new Point(211, 30),
@@ -188,10 +202,27 @@ public class Main {
                 new Point(155, 30),
                 new Point(127, 30),
                 new Point(99, 30),
-                new Point(71, 30),
-                new Point(43, 30)};
+                new Point(71, 30)
+        };
 
 
+        public final static Point[] LEGACY_MODULE_LOC = {
+                new Point(700, 50),
+                new Point(700, 300),
+                new Point(700, 550),
+                new Point(200, 550),
+                new Point(200, 300),
+                new Point(200, 50)
+        };
+
+        public final static Point[] LEGACY_PORTS = {
+                new Point(621, 346),
+                new Point(621, 398),
+                new Point(621, 450),
+                new Point(476, 450),
+                new Point(476, 398),
+                new Point(476, 346)
+        };
 
 
     }

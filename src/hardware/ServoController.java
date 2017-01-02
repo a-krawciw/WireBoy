@@ -1,6 +1,7 @@
 package hardware;
 
 
+import main.Main;
 import main.XMLParser;
 
 import javax.imageio.ImageIO;
@@ -18,6 +19,7 @@ public class ServoController extends HardwareDevice {
     public ServoController (String name, int port){
         super(name, port);
         image = XMLParser.readImage("/hardwareImages/servoController.png");
+        loc = Main.PointConstants.MODULE_LOC[port];
     }
 
     public void drawModule(Graphics2D g) {

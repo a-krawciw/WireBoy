@@ -43,4 +43,9 @@ public class Sensor extends HardwareDevice {
         }
         return "" + port;
     }
+
+    @Override
+    public String toString() {
+        return "Name: " + getName() + getPort();
+    }
 }

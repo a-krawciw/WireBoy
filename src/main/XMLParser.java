@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.Buffer;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -27,11 +28,9 @@ public class XMLParser {
         public static int topY = 50;
 
         public static void main(String[] args){
-            parseXML("lilssy.xml");
+            parseXML("Larry.xml");
 
-            topY = 10 + 10 * devices.size();
-
-            image = generateImage("lily");
+            image = generateLegacyModule((LegacyModule)devices.get(0));
             try {
                 ImageIO.write(image, "png", new File("output.png"));
             } catch (IOException e) {
@@ -50,38 +49,51 @@ public class XMLParser {
                 doc.getDocumentElement().normalize();
 
                 NodeList nList = doc.getDocumentElement().getChildNodes();
+                parseModules(nList);
 
-                for (int temp = 0; temp < nList.getLength(); temp++) {
-                    Node nNode = nList.item(temp);
-                    try {
-                        Element e = ((Element) nNode);
-
-                        switch (e.getTagName()) {
-                            case "MotorController":
-                                MotorController mc = new MotorController(e.getAttribute("name"), (temp - 1) / 2);
-                                mc.setSerialNumber(e.getAttribute("serialNumber"));
-                                addChildren(mc, e.getChildNodes());
-                                devices.add(mc);
-                                break;
-                            case "ServoController":
-                                ServoController sc = new ServoController(e.getAttribute("name"), (temp - 1) / 2);
-                                sc.setSerialNumber(e.getAttribute("serialNumber"));
-                                addChildren(sc, nNode.getChildNodes());
-                                devices.add(sc);
-                                break;
-                            case "DeviceInterfaceModule":
-                                SensorModule sm = new SensorModule(e.getAttribute("name"), (temp - 1) / 2);
-                                sm.setSerialNumber(e.getAttribute("serialNumber"));
-                                addChildren(sm, nNode.getChildNodes());
-                                devices.add(sm);
-                                break;
-                        }
-                    } catch (Exception e){
-                    }
-
-                }
             } catch (Exception e) {
                 show("out" + e.getMessage());
+            }
+        }
+
+        public static void parseModules(NodeList nList){
+            for (int temp = 0; temp < nList.getLength(); temp++) {
+                Node nNode = nList.item(temp);
+                try {
+                    Element e = ((Element) nNode);
+                    int port = (temp - 1) / 2;
+
+                    switch (e.getTagName()) {
+                        case "MotorController":
+                            if(e.hasAttribute("port")) port = 6 + Integer.parseInt(e.getAttribute("port"));
+                            MotorController mc = new MotorController(e.getAttribute("name"), port);
+                            mc.setSerialNumber(e.getAttribute("serialNumber"));
+                            addChildren(mc, e.getChildNodes());
+                            devices.add(mc);
+                            break;
+                        case "ServoController":
+                            if(e.hasAttribute("port")) port = 6 + Integer.parseInt(e.getAttribute("port"));
+                            ServoController sc = new ServoController(e.getAttribute("name"), port);
+                            sc.setSerialNumber(e.getAttribute("serialNumber"));
+                            addChildren(sc, nNode.getChildNodes());
+                            devices.add(sc);
+                            break;
+                        case "DeviceInterfaceModule":
+                            if(e.hasAttribute("port")) port = 6 + Integer.parseInt(e.getAttribute("port"));
+                            SensorModule sm = new SensorModule(e.getAttribute("name"), port);
+                            sm.setSerialNumber(e.getAttribute("serialNumber"));
+                            addChildren(sm, nNode.getChildNodes());
+                            devices.add(sm);
+                            break;
+                        case "LegacyModuleController":
+                            LegacyModule lm = new LegacyModule(e.getAttribute("name"), (temp - 1) / 2);
+                            lm.setSerialNumber(e.getAttribute("serialNumber"));
+                            addChildren(lm, nNode.getChildNodes());
+                            devices.add(lm);
+                    }
+                } catch (Exception e){
+                }
+
             }
         }
 
@@ -101,9 +113,22 @@ public class XMLParser {
                             Servo s = new Servo(e.getAttribute("name"), Integer.parseInt(e.getAttribute("port")));
                             parent.addChild(s);
                             break;
+                        case "MotorController":
+                            LegacyMotorController mc = new LegacyMotorController(e.getAttribute("name"), Integer.parseInt(e.getAttribute("port")));
+                            mc.setSerialNumber(e.getAttribute("name"));
+                            parent.addChild(mc);
+                            addChildren(mc, e.getChildNodes());
+                            break;
+                        case "ServoController":
+                            LegacyServoController sc = new LegacyServoController(e.getAttribute("name"), Integer.parseInt(e.getAttribute("port")));
+                            sc.setSerialNumber(e.getAttribute("name"));
+                            parent.addChild(sc);
+                            addChildren(sc, e.getChildNodes());
+                            break;
                         default:
                             Sensor se = new Sensor(e.getAttribute("name"), Integer.parseInt(e.getAttribute("port")), e.getTagName());
                             parent.addChild(se);
+                            System.out.println(se);
                             break;
                     }
                 }catch (Exception e){
@@ -116,14 +141,19 @@ public class XMLParser {
 
         public static BufferedImage generateImage(String fileName){
 
-            BufferedImage bm = new BufferedImage(1520, 1180, BufferedImage.TYPE_INT_ARGB);
+            int numLegacyModules = 0;
+            for (HardwareDevice h :
+                    devices) {
+                if (h instanceof LegacyModule) numLegacyModules++;
+            }
+
+            BufferedImage bm = new BufferedImage(1520 + numLegacyModules * 1100, 1180, BufferedImage.TYPE_INT_ARGB);
 
             Graphics2D g = bm.createGraphics();
 
             g.setColor(Color.WHITE);
-            g.fillRect(0, 0, 1520, 1180);
+            g.fillRect(0, 0, bm.getWidth(), bm.getHeight());
 
-            g.setColor(HardwareDevice.greyText);
             Font defaultFont = g.getFont();
             g.setFont(defaultFont.deriveFont(50.0f));
             g.setColor(Color.BLACK);
@@ -155,13 +185,37 @@ public class XMLParser {
             g.drawLine(PointConstants.USB_PHONE.x + 140, PointConstants.USB_PHONE.y - 220, PointConstants.USB_PHONE.x + 140, PointConstants.USB_POWER_MODULE.y);
             g.drawLine(PointConstants.USB_PHONE.x + 140, PointConstants.USB_POWER_MODULE.y, PointConstants.USB_POWER_MODULE.x, PointConstants.USB_POWER_MODULE.y);
 
+            numLegacyModules = 0;
             for (HardwareDevice h : devices) {
                 h.drawModule(g);
+                if(h instanceof LegacyModule){
+                    g.drawImage(generateLegacyModule((LegacyModule)h), 1560 + numLegacyModules * 1100, 160, null);
+                    numLegacyModules++;
+                }
             }
             image = bm;
             return bm;
         }
 
+        public static BufferedImage generateLegacyModule(LegacyModule lm){
+            BufferedImage bm = new BufferedImage(1100, 800, BufferedImage.TYPE_INT_ARGB);
+
+            Graphics2D g = bm.createGraphics();
+
+            g.setColor(Color.WHITE);
+            g.fillRect(0, 0, 1100, 800);
+
+            g.drawImage(lm.getImage(), 450, 300, null);
+
+            Font defaultFont = g.getFont();
+            g.setFont(defaultFont.deriveFont(30.0f));
+            g.setColor(Color.BLACK);
+            g.drawString(lm.getSerialNumber(), 550 - g.getFontMetrics().stringWidth(lm.getSerialNumber()) / 2, 200);
+
+            lm.drawChildren(g);
+
+            return bm;
+        }
 
         public static BufferedImage readImage(String filePath){
             try {
@@ -178,6 +232,13 @@ public class XMLParser {
 
 
 
+        public static BufferedImage getSubimage(double x, double y, double width, double height){
+            if(x < 0) x = 0;
+            if(y < 0) y = 0;
+            if(x + width > image.getWidth()) x = image.getWidth() - width;
+            if(y + width > image.getHeight()) y = image.getHeight() - height;
+            return image.getSubimage((int) x, (int) y, (int) width, (int) height);
+        }
 
         public static void show(String text){
             JOptionPane.showMessageDialog(Main.frame, text);

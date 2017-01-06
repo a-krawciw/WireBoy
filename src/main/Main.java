@@ -35,15 +35,16 @@ public class Main {
 
     static MouseMotionHandler mouse;
 
-    public static Color backgroundColor = Color.WHITE;
+    public static Color backgroundColor = new Color(0x66F6DD);
     public static Color foregroundColor = Color.BLUE;
     public static Color fixitGreen = new Color(0x79FF15);
+    public static Color textColor = Color.WHITE;
 
     public static void main(String [] args){
         frame = new JFrame("WireBoy");
         frame.setLayout(new MigLayout("pack, flowy, center x"));
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.getContentPane().setBackground(Color.BLACK);
+        frame.getContentPane().setBackground(backgroundColor);
 
         frame.setIconImage(XMLParser.readImage("/otherImages/ftclogo.jpg"));
 
@@ -56,12 +57,18 @@ public class Main {
                 g2.fillRect(0, 0, 760, 590);
                 if(image != null){
                     g.drawImage(image, 0, 295 - (380 * image.getHeight() / image.getWidth()), 760, 760 * image.getHeight() / image.getWidth(), null);
-                    g.setColor(Color.LIGHT_GRAY);
-                    g.drawRect(0, 295 - (380 * image.getHeight() / image.getWidth()), 760, 760 * image.getHeight() / image.getWidth());
                 } else {
-                    g2.setColor(Color.BLACK);
+
+                    g2.setColor(backgroundColor);
                     g2.setStroke(new BasicStroke(10));
                     g2.drawRect(0, 0, 760, 590);
+
+                    g2.setFont(g2.getFont().deriveFont(Font.BOLD, 40));
+                    int width = g2.getFontMetrics().stringWidth("Welcome to WireBoy");
+
+
+                    g.setColor(textColor);
+                    g2.drawString("Welcome to WireBoy", getWidth() / 2 - width / 2, getHeight() / 2 - g2.getFont().getSize() / 2);
                 }
             }
         };
@@ -202,7 +209,8 @@ public class Main {
                 new Point(155, 30),
                 new Point(127, 30),
                 new Point(99, 30),
-                new Point(71, 30)
+                new Point(71, 30),
+                new Point(43, 30)
         };
 
 

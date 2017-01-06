@@ -9,8 +9,10 @@ import java.awt.*;
  */
 public class ZoomTip extends JPanel {
     private Image toDraw;
+    Color c = new Color(0, 0, 0, 0);
 
     public ZoomTip(int width, int height){
+        setBackground(c);
         setPreferredSize(new Dimension(width, height));
     }
 
@@ -20,18 +22,14 @@ public class ZoomTip extends JPanel {
         if(toDraw != null){
             g.drawImage(toDraw, 0, 0, getWidth(), getHeight(), null);
         }
+        g.setColor(c);
+        g.fillRect(0, 0, getWidth(), getHeight());
     }
 
     public void update(Point loc, Image pic){
         toDraw = pic;
-        int x = loc.x;
-        int y = loc.y;
-        if(loc.x > 380){
-            x -= getWidth();
-        }
-        if(loc.y > 290){
-            y -= getHeight();
-        }
+        int x = loc.x ;
+        int y = loc.y ;
 
         setLocation(x, y);
 

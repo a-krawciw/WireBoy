@@ -13,7 +13,7 @@ public class LegacyMotorController extends HardwareDevice {
 
     public LegacyMotorController(String name, int port) {
         super(name, port);
-        image = XMLParser.readImage("/hardwareImages/motorController.png");
+        image = XMLParser.readImage("/hardwareImages/legacyMotorController.PNG");
 
         loc = Main.PointConstants.LEGACY_MODULE_LOC[port];
     }

@@ -13,7 +13,7 @@ public class LegacyServoController extends HardwareDevice {
 
     public LegacyServoController(String name, int port) {
         super(name, port);
-        image = XMLParser.readImage("/hardwareImages/servoController.png");
+        image = XMLParser.readImage("/hardwareImages/legacyServoController.PNG");
         loc = Main.PointConstants.LEGACY_MODULE_LOC[port];
     }
 

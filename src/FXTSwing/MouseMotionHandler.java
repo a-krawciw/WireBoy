@@ -30,9 +30,10 @@ public class MouseMotionHandler implements MouseMotionListener {
     @Override
     public void mouseMoved(MouseEvent e) {
         mouseLoc = e.getPoint();
+        Point cursorLoc = new Point(mouseLoc.x - toUpdate.getWidth() / 2, mouseLoc.y - toUpdate.getHeight() / 2);
         if(toUpdate != null && XMLParser.image != null){
             double scaleFactor = image.getWidth() / 760.0;
-            toUpdate.update(mouseLoc, XMLParser.getSubimage(scaleFactor * mouseLoc.x, (mouseLoc.y - (295 - (380 * image.getHeight() / image.getWidth()))) * scaleFactor, toUpdate.getWidth() / zoomFactor, toUpdate.getHeight() / zoomFactor));
+            toUpdate.update(cursorLoc, XMLParser.getSubimage(scaleFactor * mouseLoc.x, (mouseLoc.y - (295 - (380 * image.getHeight() / image.getWidth()))) * scaleFactor, toUpdate.getWidth() / zoomFactor, toUpdate.getHeight() / zoomFactor));
         }
     }
 

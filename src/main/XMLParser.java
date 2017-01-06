@@ -63,6 +63,7 @@ public class XMLParser {
                     Element e = ((Element) nNode);
                     int port = (temp - 1) / 2;
 
+                    if(!checkSize()) return;
                     switch (e.getTagName()) {
                         case "MotorController":
                             if(e.hasAttribute("port")) port = 6 + Integer.parseInt(e.getAttribute("port"));
@@ -95,6 +96,14 @@ public class XMLParser {
                 }
 
             }
+        }
+
+        private static boolean checkSize(){
+            if(devices.size() >= 7){
+                show("Unfortunately, WireBoy can only handle 7 modules.");
+                return false;
+            }
+            return true;
         }
 
 
@@ -233,15 +242,25 @@ public class XMLParser {
 
 
         public static BufferedImage getSubimage(double x, double y, double width, double height){
-            if(x < 0) x = 0;
-            if(y < 0) y = 0;
-            if(x + width > image.getWidth()) x = image.getWidth() - width;
-            if(y + width > image.getHeight()) y = image.getHeight() - height;
+//            if(x < 0) x = 0;
+//            if(y < 0) y = 0;
+//            if(x + width > image.getWidth()) x = image.getWidth() - width;
+//            if(y + width > image.getHeight()) y = image.getHeight() - height;
+            if(x < 0 || y < 0 || x + width > image.getWidth() || y + width > image.getHeight() ) return getTransparentBox((int)width,(int) height);
             return image.getSubimage((int) x, (int) y, (int) width, (int) height);
+        }
+
+        private static BufferedImage getTransparentBox(int width, int height){
+            BufferedImage bm = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            Graphics g = bm.getGraphics();
+            g.fillRect(0, 0, width, height);
+            g.dispose();
+            return bm;
         }
 
         public static void show(String text){
             JOptionPane.showMessageDialog(Main.frame, text);
+            System.out.println(text);
         }
 
 

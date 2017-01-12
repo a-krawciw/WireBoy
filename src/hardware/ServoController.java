@@ -33,6 +33,7 @@ public class ServoController extends HardwareDevice {
         if (isOnLeft()) {
             g.setColor(greySerial);
             g.drawString(serialNumber, loc.x - 130, loc.y + 30);
+            g.drawString(name, loc.x - 130, loc.y + 10);
 
             g.setColor(greyText);
             for (int i = children.size() - 1; i >= 0; i--) {
@@ -46,6 +47,7 @@ public class ServoController extends HardwareDevice {
         } else {
             g.setColor(greySerial);
             g.drawString(serialNumber, loc.x + 250, loc.y + 30);
+            g.drawString(name, loc.x + 250, loc.y + 10);
 
             g.setColor(greyText);
             for (HardwareDevice child : children) {
@@ -54,7 +56,7 @@ public class ServoController extends HardwareDevice {
 
             g.setColor(greyLine);
             g.drawLine(loc.x + 230, loc.y + 35, loc.x + 330, loc.y + 35);
-            g.drawLine(loc.x + 245, loc.y + 10, loc.x + 245, loc.y + 155);
+            g.drawLine(loc.x + 245, loc.y, loc.x + 245, loc.y + 155);
         }//else
     }
 

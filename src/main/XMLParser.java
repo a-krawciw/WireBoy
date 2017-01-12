@@ -219,7 +219,8 @@ public class XMLParser {
             Font defaultFont = g.getFont();
             g.setFont(defaultFont.deriveFont(30.0f));
             g.setColor(Color.BLACK);
-            g.drawString(lm.getSerialNumber(), 550 - g.getFontMetrics().stringWidth(lm.getSerialNumber()) / 2, 200);
+            g.drawString(lm.getName(),  550 - g.getFontMetrics().stringWidth(lm.getName()) / 2, 215);
+            g.drawString(lm.getSerialNumber(), 550 - g.getFontMetrics().stringWidth(lm.getSerialNumber()) / 2, 250);
 
             lm.drawChildren(g);
 

@@ -77,6 +77,7 @@ public abstract class HardwareDevice {
         if (isOnLeft()) {
             g.setColor(greySerial);
             g.drawString(serialNumber, loc.x - 130, loc.y + 30);
+            g.drawString(name, loc.x - 130, loc.y + 10);
 
             g.setColor(greyText);
             for (HardwareDevice child : children) {
@@ -85,10 +86,11 @@ public abstract class HardwareDevice {
 
             g.setColor(greyLine);
             g.drawLine(loc.x - 150, loc.y + 35, loc.x - 50, loc.y + 35);
-            g.drawLine(loc.x - 135, loc.y + 10, loc.x - 135, loc.y + 155);
+            g.drawLine(loc.x - 135, loc.y, loc.x - 135, loc.y + 155);
         } else {
             g.setColor(greySerial);
             g.drawString(serialNumber, loc.x + 250, loc.y + 30);
+            g.drawString(name, loc.x + 250, loc.y + 10);
 
             g.setColor(greyText);
             for (HardwareDevice child : children) {
@@ -97,7 +99,7 @@ public abstract class HardwareDevice {
 
             g.setColor(greyLine);
             g.drawLine(loc.x + 230, loc.y + 35, loc.x + 330, loc.y + 35);
-            g.drawLine(loc.x + 245, loc.y + 10, loc.x + 245, loc.y + 155);
+            g.drawLine(loc.x + 245, loc.y, loc.x + 245, loc.y + 155);
         }//else
     }
 
